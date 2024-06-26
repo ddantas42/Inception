@@ -1,26 +1,27 @@
-CC = c++
-CFLAGS = -Wno-unused-variable
-NAME = blackjack
-RM = rm
-FILESC = main.cpp  Hand.cpp Card.cpp game.cpp
+# '-f' specify the file to use. 'up' start the containers. '-d' detached mode. '--build' build the images before starting the containers.
+all:
+	docker compose -f ./srcs/docker-compose.yml up --build
 
-OBJS = $(FILESC:.cpp=.o)
+# 'down' stop and remove the containers.
+stop:
+	docker compose -f ./srcs/docker-compose.yml down
 
-all: $(NAME)
+re:
+	docker compose -f srcs/docker-compose.yml up --build --no-cache
 
-$(NAME): $(OBJS)
-	$(CC) $(CFLAGS) -o $(NAME) $(OBJS)
+# 'ps' list the containers. 'images' list the images.
+status :
+	docker ps
+	docker images
 
-%.o: %.cpp
-	c++ $(CFLAGS) -c -o $@ $<
-
+# 'stop' stop the containers. 'rm' remove the containers. 'rmi' remove the images. 'volume rm' remove the volumes. 'network rm' remove the networks and keeps the defaults bridge|host|none.
 clean:
-	$(RM) -f $(OBJS)
-	
-fclean: clean
-	$(RM) -f $(NAME)
+	docker stop $$(docker ps -qa);\
+	docker rm $$(docker ps -qa);\
+	docker rmi -f $$(docker images -qa);\
+	docker volume rm $$(docker volume ls -q);\
+	for network in $$(docker network ls --format "{{.Name}}" | grep -vE '^(bridge|host|none)'); do \
+    	docker network rm $$network; \
+    done
 
-re: fclean all
-
-
-.PHONY: all clean fclean re
+.PHONY: all stop re status clean
