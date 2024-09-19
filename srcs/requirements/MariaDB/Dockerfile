@@ -1,13 +1,12 @@
 FROM alpine:3.20.1
 
-# Install MariaDB
-RUN apk --no-cache add mariadb mariadb-client
+# Install MariaDB and its dependencies
+RUN apk update && \
+    apk add --no-cache mariadb mariadb-client mariadb-server-utils
 
-# Create necessary directories and set permissions
-RUN mkdir -p /run/mysqld \
-    && chown -R mysql:mysql /run/mysqld \
-    && mkdir -p /var/lib/mysql \
-    && chown -R mysql:mysql /var/lib/mysql
+# Create necessary directories with proper permissions
+RUN mkdir -p /var/lib/mysql /var/run/mysqld /var/log/mysql && \
+    chown -R mysql:mysql /var/lib/mysql /var/run/mysqld /var/log/mysql
 
 # Copy custom MySQL configuration file
 COPY my.cnf /etc/my.cnf
@@ -15,5 +14,8 @@ COPY my.cnf /etc/my.cnf
 # Expose port 3306 for MySQL
 EXPOSE 3306
 
+# Set default user
+USER mysql
+
 # Start MariaDB server
-CMD ["mysqld"]
+CMD ["mysqld_safe"]
