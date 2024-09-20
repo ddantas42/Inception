@@ -1,9 +1,7 @@
-version: '3.8'
-
-networks:
-  app-network:
-    name: app-network
-    driver: bridge
+# networks:
+#   app-network:
+#     name: app-network
+#     driver: bridge
 
 volumes:
   mariadb_data:
@@ -15,7 +13,7 @@ volumes:
 
 services:
   mariadb:
-    build: ./requirements/MariaDB
+    build: ./requirements/mariadb
     container_name: mariadb
     
     environment:
@@ -23,11 +21,14 @@ services:
       MARIADB_DATABASE: ${MARIADB_DATABASE}
       MARIADB_USER: ${MARIADB_USER}
       MARIADB_PASSWORD: ${MARIADB_PASSWORD}
+
     ports:
       - 3306:3306
-    networks:
-      - app-network
+
     volumes:
       - mariadb_data:/var/lib/mysql
-    restart: always
+      
+    # restart: unless-stopped
+    # networks:
+    #   - app-network
   
