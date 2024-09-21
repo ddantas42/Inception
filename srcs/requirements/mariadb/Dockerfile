@@ -1,18 +1,14 @@
 FROM debian:bullseye
 
-# Install MariaDB and its dependencies
-RUN apt update && \
-    apt install mariadb-server mariadb-client -y
+RUN apt-get update && \
+    apt-get install -y mariadb-server mariadb-client && \
+    mkdir -p /run/mysqld && \
+    chown -R mysql:mysql /run/mysqld
 
-# Copy custom MySQL configuration file
-COPY my.cnf /etc/mysql/my.cnf
+COPY ./50-server.cnf /etc/mysql/mariadb.conf.d/50-server.cnf
+COPY ./script.sh /
+RUN chmod +x script.sh
 
-RUN mkdir /var/run/mysqld && chown mysql:mysql /var/run/mysqld
-
-USER mysql
-
-# Expose port 3306 for MySQL
 EXPOSE 3306
 
-# Default CMD to run the server
-CMD ["mysqld", "--user=mysql", "--console"]
+CMD ["./script.sh"]

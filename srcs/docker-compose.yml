@@ -15,16 +15,7 @@ services:
   mariadb:
     build: ./requirements/mariadb
     container_name: mariadb
-    
-    environment:
-      MARIADB_ROOT_PASSWORD: ${MARIADB_ROOT_PASSWORD}
-      MARIADB_DATABASE: ${MARIADB_DATABASE}
-      MARIADB_USER: ${MARIADB_USER}
-      MARIADB_PASSWORD: ${MARIADB_PASSWORD}
-
-    ports:
-      - 3306:3306
-
+    env_file: .env
     volumes:
       - mariadb_data:/var/lib/mysql
       
