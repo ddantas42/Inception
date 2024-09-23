@@ -1,72 +1,39 @@
 #!/bin/bash
 
-# Create mysqld run directory if it doesn't exist
-mkdir -p /run/mysqld
-chown -R mysql:mysql /run/mysqld
+echo "------------------- INITIATING DB -------------------"
+mysqld --user=root --socket=/run/mysqld/mysqld.sock --datadir='/var/lib/mysql' &
 
-# Initialize the database if it hasn't been initialized yet
-if [ ! -d "/var/lib/mysql/mysql" ]; then
-    echo "Initializing MariaDB data directory..."
-    mariadb-install-db --user=mysql --basedir=/usr --datadir=/var/lib/mysql
-fi
-
-# Start MariaDB in the background
-echo "Starting MariaDB..."
-mysqld_safe --datadir='/var/lib/mysql' &
-
-# Wait until MariaDB is fully started by checking if the socket file exists
-socket_file="/run/mysqld/mysqld.sock"
-for i in {30..0}; do
-    if [ -S "$socket_file" ]; then
-        echo "MariaDB is up and running."
-        break
-    fi
-    echo "Waiting for MariaDB to start..."
-    sleep 1
-done
-
-if [ ! -S "$socket_file" ]; then
-    echo "Error: MariaDB failed to start."
-    exit 1
-fi
-
-# Run mysql_upgrade with root user using Unix socket authentication
-echo "Running mysql_upgrade as root..."
-mysql_upgrade --user=root --socket=/run/mysqld/mysqld.sock --force
-
-# Keep the container running
-tail -f /dev/null
 sleep 5
 
-# rm -rf /var/lib/mysql/*
+echo "------------------- ROOT PASSWORD AND USER -------------------"
+mysql -u root -e "ALTER USER 'root'@'localhost' IDENTIFIED BY '$MARIADB_ROOT_PASSWORD';" -p"$MARIADB_ROOT_PASSWORD"
+mysql -u root -e "ALTER USER '$MARIADB_USER'@'localhost' IDENTIFIED BY '$MARIADB_PASSWORD';" -p"$MARIADB_ROOT_PASSWORD"
 
-echo "Starting"
+echo "------------------- DONE SETUP DB -------------------"
 tail -f
-# service mariadb start 
-# sleep 1
 
-# echo "CREATE USER '$MARIADB_USER'@'' IDENTIFIED BY '$MARIADB_PASSWORD';" | mariadb
-# sleep 1
+# echo "n
+# y
+# y
+# $MARIADB_ROOT_PASSWORD
+# $MARIADB_ROOT_PASSWORD
+# n
+# n
+# y" | mysql_secure_installation
 
-# echo "GRANT ALL PRIVILEGES ON *.* TO '$MARIADB_USER'@'%' IDENTIFIED BY '$MARIADB_PASSWORD';" | mariadb
-# sleep 1
+# echo "Running mysql_upgrade as root..."
+# mysql_upgrade --user=root --socket=/run/mysqld/mysqld.sock --force
 
-# echo "GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' IDENTIFIED BY '$MARIADB_ROOT_PASSWORD';" | mariadb
-# sleep 1
+# echo "Starting DB"
+# exec mysqld_safe --datadir='/var/lib/mysql' --user=root --password="password" &
 
-# echo "FLUSH PRIVILEGES;" | mariadb
-# sleep 1
+# sleep 5
 
-# echo "CREATE DATABASE $MARIADB_DATABASE;" | mariadb
-# sleep 1
+# echo "CREATE USER '$MARIADB_USER'@'localhost' IDENTIFIED BY '$MARIADB_PASSWORD';" | mysql -u root -p"$MARIADB_ROOT_PASSWORD"
+# echo "GRANT ALL PRIVILEGES ON *.* TO '$MARIADB_USER'@'localhost' WITH GRANT OPTION;" | mysql -u root
+# echo "FLUSH PRIVILEGES;" | mysql -u root
 
-# service mariadb stop
-# sleep 1
+# echo "User '$MARIADB_USER' created"
 
-# echo "ALTER USER 'root'@'localhost' IDENTIFIED BY '$MARIADB_ROOT_PASSWORD' ;" | mariadb -uroot -p$MARIADB_ROOT_PASSWORD --socket=/run/mysqld/mysqld.sock 
-# sleep 1
 
-# echo "FLUSH PRIVILEGES;" | mariadb -uroot -p$MARIADB_ROOT_PASSWORD --socket=/run/mysqld/mysqld.sock
-# sleep 1
-
-# exec mysqld --socket=/run/mysqld/mysqld.sock --pid-file=/run/mysqld/mysqld.pid
+# tail -f
