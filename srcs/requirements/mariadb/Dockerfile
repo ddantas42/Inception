@@ -13,4 +13,4 @@ EXPOSE 3306
 
 ENTRYPOINT [ "./script.sh" ]
 
-CMD [ "mysqld" ]
+CMD [ "mysqld", "--user=root", "--socket=/run/mysqld/mysqld.sock", "--datadir='/var/lib/mysql'" ]

@@ -1,6 +1,9 @@
 # '-f' specify the file to use. 'up' start the containers. '-d' detached mode. '--build' build the images before starting the containers.
 all:
 	docker compose  -f  ./srcs/docker-compose.yml up  --build 
+	
+up:	
+	docker compose  -f  ./srcs/docker-compose.yml up
 
 # 'down' stop and remove the containers.
 down:
