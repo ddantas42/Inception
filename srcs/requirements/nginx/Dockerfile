@@ -14,5 +14,5 @@ COPY nginx.conf /etc/nginx/nginx.conf
 EXPOSE 9000
 
 
-CMD [ "./script.sh" ]
-# CMD [ "nginx", "-g", "'daemon off;'" ]
+ENTRYPOINT [ "./script.sh" ]
+CMD ["nginx", "-g", "daemon off;"]

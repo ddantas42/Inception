@@ -54,10 +54,10 @@ services:
     container_name: nginx
     env_file: .env
     
-    depends_on:
-      - mariadb
     ports:
       - "443:443"
-
+    networks:
+      - app-network
+    
     restart: unless-stopped
 
