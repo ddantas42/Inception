@@ -7,12 +7,9 @@ RUN apt update && \
 COPY script.sh /
 RUN chmod +x script.sh
 
-RUN service nginx start
-
 COPY nginx.conf /etc/nginx/nginx.conf
 
-EXPOSE 9000
+EXPOSE 433
 
 
-ENTRYPOINT [ "./script.sh" ]
-CMD ["nginx", "-g", "daemon off;"]
+CMD [ "nginx", "-g", "daemon off;" ]

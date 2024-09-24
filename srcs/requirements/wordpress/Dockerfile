@@ -11,7 +11,5 @@ COPY php.ini /etc/php/7.4/cli/php.ini
 COPY script.sh /
 RUN chmod +x script.sh
 
-EXPOSE 3306
-EXPOSE 9000
 
 CMD [ "./script.sh" ]
