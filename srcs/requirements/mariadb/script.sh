@@ -26,4 +26,8 @@ fi
 
 echo "------------------- DONE SETUP DB -------------------"
 
-tail -f
+echo "------------------- Restarting DB -------------------"
+
+mysqladmin -u root -p"$MARIADB_ROOT_PASSWORD" shutdown
+
+exec mysqld --user=root --socket=/run/mysqld/mysqld.sock --datadir='/var/lib/mysql'
