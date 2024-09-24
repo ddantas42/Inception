@@ -1,11 +1,12 @@
 #!/bin/bash
 
 echo "------------------- INITIATING DB -------------------"
+
 mysqld --user=root --socket=/run/mysqld/mysqld.sock --datadir='/var/lib/mysql' &
 
 sleep 5
 
-echo "------------------- ROOT PASSWORD AND USER -------------------"
+echo "----------------- ROOT PASSWORD AND USER ------------"
 
 mysql -u root -e "ALTER USER 'root'@'localhost' IDENTIFIED BY '$MARIADB_ROOT_PASSWORD';" -p"$MARIADB_ROOT_PASSWORD"
 echo "Root password changed"
