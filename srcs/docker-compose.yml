@@ -1,7 +1,7 @@
-# networks:
-#   app-network:
-#     name: app-network
-#     driver: bridge
+networks:
+  app-network:
+    name: app-network
+    driver: bridge
 
 volumes:
   mariadb_data:
@@ -25,30 +25,25 @@ services:
     build: ./requirements/mariadb
     container_name: mariadb
     env_file: .env
-    ports:
-      - "3306:3306"
     volumes:
       - mariadb_data:/var/lib/mysql
       
     restart: unless-stopped
-    # networks:
-    #   - app-network
+    networks:
+      - app-network
 
   wordpress:
     image: wordpress
     build: ./requirements/wordpress
     container_name: wordpress
     env_file: .env
-    ports:
-      - "3306:3306"
-      - "9000:9000"
     volumes:
       - wordpress_data:/var/www/html
     depends_on:
       - mariadb
     restart: unless-stopped
-    # networks:
-    #   - app-network
+    networks:
+      - app-network
 
   nginx:
     image: nginx
