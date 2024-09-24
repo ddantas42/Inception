@@ -25,34 +25,39 @@ services:
     build: ./requirements/mariadb
     container_name: mariadb
     env_file: .env
+    
     volumes:
       - mariadb_data:/var/lib/mysql
-      
-    restart: unless-stopped
     networks:
       - app-network
+
+    restart: unless-stopped
 
   wordpress:
     image: wordpress
     build: ./requirements/wordpress
     container_name: wordpress
     env_file: .env
+
     volumes:
       - wordpress_data:/var/www/html
     depends_on:
       - mariadb
-    restart: unless-stopped
     networks:
       - app-network
+
+    restart: unless-stopped
 
   nginx:
     image: nginx
     build: ./requirements/nginx
     container_name: nginx
     env_file: .env
+    
     depends_on:
-      - wordpress
+      - mariadb
     ports:
       - "443:443"
+
     restart: unless-stopped
 
