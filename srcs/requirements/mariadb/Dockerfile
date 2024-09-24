@@ -11,6 +11,4 @@ RUN chmod +x script.sh
 
 EXPOSE 3306
 
-ENTRYPOINT [ "./script.sh" ]
-
-# CMD [ "mysqld", "--user=root", "--socket=/run/mysqld/mysqld.sock", "--datadir='/var/lib/mysql'"]
+CMD [ "./script.sh" ]

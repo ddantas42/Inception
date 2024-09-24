@@ -11,15 +11,48 @@ volumes:
       o: bind
       device: ${MARIADB_PATH}
 
+  wordpress_data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ${WORDPRESS_PATH}
+
 services:
+
   mariadb:
+    image: mariadb
     build: ./requirements/mariadb
     container_name: mariadb
     env_file: .env
+
     volumes:
       - mariadb_data:/var/lib/mysql
       
-    # restart: unless-stopped
+    restart: unless-stopped
     # networks:
     #   - app-network
-  
+
+  wordpress:
+    image: wordpress
+    build: ./requirements/wordpress
+    container_name: wordpress
+    env_file: .env
+    volumes:
+      - ./requirements/wordpress:/var/www/html
+    depends_on:
+      - mariadb
+    restart: unless-stopped
+    # networks:
+    #   - app-network
+
+  nginx:
+    image: nginx
+    build: ./requirements/nginx
+    container_name: nginx
+    env_file: .env
+    depends_on:
+      - wordpress
+    ports:
+      - "443:443"
+
