@@ -1,8 +1,9 @@
 FROM debian:bullseye
 
 RUN apt update && \
-	apt install nginx openssl -y && \
-	apt-get install certbot python3-certbot-nginx -y && \
+	apt install nginx openssl \
+	certbot python3-certbot-nginx \
+	install gettext -y && \
 	mkdir -p /var/www/html/
 
 	
@@ -11,7 +12,7 @@ RUN openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
     -keyout /etc/nginx/ssl/selfsigned.key -out /etc/nginx/ssl/selfsigned.crt \
     -subj "/C=US/ST=State/L=City/O=Company/OU=Org/CN=localhost"
 	
-COPY nginx.conf /etc/nginx/nginx.conf
+COPY nginx.conf.template /etc/nginx/nginx.conf.template
 
 COPY ./script.sh /
 RUN chmod +x script.sh
