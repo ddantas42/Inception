@@ -4,7 +4,10 @@ echo "------------------- INITIATING DB -------------------"
 
 mysqld --user=root --socket=/run/mysqld/mysqld.sock --datadir='/var/lib/mysql' &
 
-sleep 5
+while [ ! -S /run/mysqld/mysqld.sock ]; do
+    echo "Waiting for MySQL to start..."
+    sleep 1
+done
 
 echo "----------------- ROOT PASSWORD AND USER ------------"
 
