@@ -3,7 +3,7 @@ FROM debian:bullseye
 RUN apt update && \
 	apt install nginx openssl \
 	certbot python3-certbot-nginx \
-	install gettext -y && \
+	gettext -y && \
 	mkdir -p /var/www/html/
 
 	
