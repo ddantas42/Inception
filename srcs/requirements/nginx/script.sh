@@ -3,3 +3,7 @@
 envsubst < /etc/nginx/nginx.conf.template > /etc/nginx/nginx.conf
 
 nginx -g "daemon off;"
+
+echo "Didnt work!!"
+
+tail -f
