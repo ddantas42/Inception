@@ -24,8 +24,8 @@ http {
         # Handle PHP scripts
         location ~ \.php$ {
             include snippets/fastcgi-php.conf;
-            fastcgi_pass php-fpm:9000;  # Ensure the service name matches your Docker setup
-            fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+            fastcgi_pass wordpress:9000;
+            fastcgi_param SCRIPT_FILENAME $document_root/$fastcgi_script_name;
             include fastcgi_params;
         }
 

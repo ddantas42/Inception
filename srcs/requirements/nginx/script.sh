@@ -2,8 +2,10 @@
 
 envsubst < /etc/nginx/nginx.conf.template > /etc/nginx/nginx.conf
 
-nginx -g "daemon off;"
+service nginx status
+
+echo "Starting Nginx"
+exec nginx -g "daemon off;"
+
 
 echo "Didnt work!!"
-
-tail -f
