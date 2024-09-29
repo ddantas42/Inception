@@ -1,14 +1,14 @@
 FROM debian:bullseye
 
 RUN apt update && \
-	apt install mariadb-client php-fpm -y && \
+	apt install mariadb-client php-fpm php-mysql php-gd php-curl php-xml curl gettext -y && \
 	apt upgrade php-fpm -y && \
 	mkdir -p /var/www/html/
 
-# RUN groupadd wordpress_user && useradd -g wordpress_user wordpress_user
-# RUN sed -i 's/;daemonize = yes/daemonize = no/' /etc/php/7.4/fpm/php-fpm.conf
 
 COPY script.sh /
+COPY wp-config.php.template /
 RUN chmod +x script.sh
+RUN chmod +x wp-config.php.template
 
 CMD ["./script.sh"]
