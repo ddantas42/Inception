@@ -1,6 +1,8 @@
 #!/bin/bash
 
 
+sleep 10
+
 cd /var/www/html
 
 if [ "$(ls -A /var/www/html)" ]; then
@@ -31,6 +33,10 @@ wp theme install astra --activate --allow-root
 wp plugin update --all --allow-root
 
 mkdir -p /run/php
+
+
+
+echo "Startin PHP-FPM"
 
 /usr/sbin/php-fpm7.4 -F
 
