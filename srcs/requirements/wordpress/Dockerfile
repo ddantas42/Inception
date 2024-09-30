@@ -1,7 +1,7 @@
 FROM debian:bullseye
 
 RUN apt update && \
-	apt install mariadb-client php-fpm php-mysql php-gd php-curl php-xml curl gettext -y && \
+	apt install mariadb-client php-fpm php-mysql php-gd php-curl php-xml curl gettext wget unzip -y && \
 	apt upgrade php-fpm -y && \
 	mkdir -p /var/www/html/
 
