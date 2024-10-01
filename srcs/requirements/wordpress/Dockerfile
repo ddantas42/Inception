@@ -17,9 +17,4 @@ RUN mkdir /run/php \
 COPY script.sh /
 RUN chmod +x script.sh
 
-# COPY wp-config.php.template /
-# RUN chmod +x wp-config.php.template
-
-EXPOSE 9000
-
 CMD ["./script.sh"]
