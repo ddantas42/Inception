@@ -47,6 +47,15 @@ define('SECURE_AUTH_SALT', '0QL{PQrjX`B}k._.Vy<+2.Yo/3eQawleE*YxYQA@gR2i|xDGY-VY
 define('LOGGED_IN_SALT',   'QdBvz>DQz+9^V}CComEeQKmU&DWbERmq)}sZtvnTBeg8Ng40|3e.SFo@Ty3Y_iCA');
 define('NONCE_SALT',       '3g6DM&g_/Jy|ehae`aY(qzVX|$L%uGk}9jL`8&&tJn-7?/]ao`Z:r{n+Qov4W.4,');
 
+define('WP_HOME', 'https://' . $_SERVER['HTTP_HOST']);
+define('WP_SITEURL', 'https://' . $_SERVER['HTTP_HOST']);
+
+
+if (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https') {
+    $_SERVER['HTTPS'] = 'on';
+}
+
+
 /** Absolute path to the WordPress directory. */
 if ( !defined('ABSPATH') )
     define('ABSPATH', dirname(__FILE__) . '/');
@@ -54,3 +63,4 @@ if ( !defined('ABSPATH') )
 /** Sets up WordPress vars and included files. */
 require_once ABSPATH . 'wp-settings.php';
 ?>
+

@@ -1,23 +1,21 @@
 FROM debian:bullseye
 
-RUN apt update && \
-	apt install nginx openssl \
-	certbot python3-certbot-nginx \
-	gettext -y && \
-	mkdir -p /var/www/html/
+RUN apt-get update -y \
+	&& apt-get upgrade -y \
+	&& apt-get install -y nginx curl
 
-	
-RUN mkdir -p /etc/nginx/ssl
-RUN openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
-    -keyout /etc/nginx/ssl/selfsigned.key -out /etc/nginx/ssl/selfsigned.crt \
-    -subj "/C=US/ST=State/L=City/O=Company/OU=Org/CN=localhost"
-	
-COPY nginx.conf.template /etc/nginx/nginx.conf.template
+RUN	mkdir -p /etc/nginx/ssl  /var/www \
+	&& mkdir -p /run/nginx
 
-COPY ./script.sh /
-RUN chmod +x script.sh
+RUN curl -JLO "https://dl.filippo.io/mkcert/latest?for=linux/amd64" && \
+	chmod +x mkcert-v*-linux-amd64 && \
+	cp mkcert-v*-linux-amd64 /usr/local/bin/mkcert
 
+RUN mkcert ddantas-.42.fr && \
+	cp ddantas-.42.fr* /etc/nginx/ssl
+
+COPY nginx.conf /etc/nginx/conf.d/nginx.conf
 
 EXPOSE 433
 
-CMD [ "./script.sh" ]
+CMD ["nginx", "-g", "daemon off;"]

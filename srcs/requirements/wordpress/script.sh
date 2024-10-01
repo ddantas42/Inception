@@ -12,19 +12,24 @@ fi
 
 cd /var/www/html
 
+
 wget https://wordpress.org/latest.zip
-unzip latest.zip
+echo "Unzipping Wordpress"
+unzip latest.zip > /dev/null
+echo "Wordpress Unzipped"
+
 rm latest.zip
 mv wordpress/* .
 rm -rf wordpress
 
 envsubst < /wp-config.php.template > /var/www/html/wp-config.php
 
+chown -R www-data:www-data /var/www/html
+chmod -R 755 /var/www/html
+
 sed -i 's/listen = \/run\/php\/php7.4-fpm.sock/listen = 9000/g' /etc/php/7.4/fpm/pool.d/www.conf
 
 sed -i '50i\$table_prefix = '\''wp_'\'';' /var/www/html/wp-config.php
-
-
 
 tail -f
 
