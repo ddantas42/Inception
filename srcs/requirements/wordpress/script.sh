@@ -1,68 +1,19 @@
 #!/bin/bash
 
-
-# sleep 10
-
-# cd /var/www/html
-
-if [ "$(ls -A /var/www/html)" ]; then
-    rm -rf /var/www/html/*
-fi
-
-
 cd /var/www/html
 
+if [ ! -f "/var/www/html/wp-config.php" ]; then
+	wp cli update --yes --allow-root
+	wp core download --allow-root
+	wp config create --dbname=${MARIADB_DATABASE} --dbuser=${MARIADB_USER} --dbpass=${MARIADB_PASSWORD} --dbhost=mariadb --allow-root --path=/var/www/html
+	wp core install --url=${DOMAIN_NAME} --title=title --admin_user=${WODPRESS_ADMIN} --admin_password=${WORDPRESS_ADMIN_PASSWORD} --admin_email=${WODPRESS_ADMIN_EMAIL} --allow-root
+	wp theme install teluro --activate --allow-root
+	wp user create "${WORDPRESS_USER}" "${WORDPRESS_USER_EMAIL}" --role=author --user_pass=${WORDPRESS_USER_PASSWORD} --display_name="${MARIADB_USER}" --allow-root
+else
+	echo "Wordpress already installed"
+fi
 
-wget https://wordpress.org/latest.zip
-echo "Unzipping Wordpress"
-unzip latest.zip > /dev/null
-echo "Wordpress Unzipped"
-
-rm latest.zip
-mv wordpress/* .
-rm -rf wordpress
-
-envsubst < /wp-config.php.template > /var/www/html/wp-config.php
-
-chown -R www-data:www-data /var/www/html
-chmod -R 755 /var/www/html
-
-sed -i 's/listen = \/run\/php\/php7.4-fpm.sock/listen = 9000/g' /etc/php/7.4/fpm/pool.d/www.conf
-
-sed -i '50i\$table_prefix = '\''wp_'\'';' /var/www/html/wp-config.php
-
-tail -f
-
-# curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar 
-# chmod +x wp-cli.phar 
-# mv wp-cli.phar /usr/local/bin/wp
-
-# echo "wp core download --allow-root"
-# wp core download --allow-root
-
-# envsubst < /wp-config.php.template > /var/www/html/wp-config.php
-
-# if [ -e /etc/php/7.4/fpm/pool.d/www.conf ]; then
-#   sed -i 's/listen = \/run\/php\/php7.4-fpm.sock/listen = 9000/g' /etc/php/7.4/fpm/pool.d/www.conf
-# else
-#   echo "HELP"
-# fi
-
-# wp core install --url=$DOMAIN_NAME/ --title=wp --admin_user=$MARIADB_USER --admin_password=$MARIADB_PASSWORD --admin_email=$WODPRESS_ADMIN_EMAIL --skip-email --allow-root
-
-# wp user create $WORDPRESS_USER $WORDPRESS_USER_EMAIL --role=author --user_pass=$WORDPRESS_USER_PASSWORD --allow-root
-
-# wp theme install astra --activate --allow-root
-
-# wp plugin update --all --allow-root
-
-# mkdir -p /run/php
-
-
-
-echo "Startin PHP-FPM"
-
-/usr/sbin/php-fpm7.4 -F
+exec /usr/sbin/php-fpm7.4 -F
 
 while true; do
 	echo "ERROR STARTING PHP-FPM"
