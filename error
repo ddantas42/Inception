@@ -1,8 +1,0 @@
-Error: WordPress files seem to already be present here.
-Error: Database connection error (2002) Connection refused
-Error: 'wp-config.php' not found.
-Either create one manually or use `wp config create`.
-Error: 'wp-config.php' not found.
-Either create one manually or use `wp config create`.
-Error: 'wp-config.php' not found.
-Either create one manually or use `wp config create`.
