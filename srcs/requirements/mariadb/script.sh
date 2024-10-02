@@ -2,7 +2,24 @@
 
 echo "------------------- INITIATING DB -------------------"
 
+if [ -z "$(ls -A /var/lib/mysql)" ]; then
+  mysqld --user=root --socket=/run/mysqld/mysqld.sock --datadir='/var/lib/mysql' &
+
+
+  sleep 5
+
+  echo "done"
+  
+  # mysqladmin -u root -p"$MARIADB_ROOT_PASSWORD" shutdown
+  service mariadb stop
+
+fi
+
+
 mysqld --user=root --socket=/run/mysqld/mysqld.sock --datadir='/var/lib/mysql' &
+
+
+
 
 while [ ! -S /run/mysqld/mysqld.sock ]; do
     echo "Waiting for MySQL to start..."

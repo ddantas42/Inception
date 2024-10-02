@@ -4,8 +4,7 @@ RUN apt-get update -y \
 	&& apt-get upgrade -y \
 	&& apt-get install -y nginx curl
 
-RUN	mkdir -p /etc/nginx/ssl  /var/www \
-	&& mkdir -p /run/nginx
+RUN	mkdir -p /etc/nginx/ssl /var/www /run/nginx
 
 RUN curl -JLO "https://dl.filippo.io/mkcert/latest?for=linux/amd64" && \
 	chmod +x mkcert-v*-linux-amd64 && \
