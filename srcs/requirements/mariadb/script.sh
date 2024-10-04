@@ -11,11 +11,6 @@ if [ -z "$(ls -A /var/lib/mysql)" ]; then
   echo "done"
   
   # mysqladmin -u root -p"$MARIADB_ROOT_PASSWORD" shutdown
-  service mariadb stop
-
-fi
-
-
 mysqld --user=root --socket=/run/mysqld/mysqld.sock --datadir='/var/lib/mysql' &
 
 
@@ -28,10 +23,13 @@ done
 
 echo "----------------- ROOT PASSWORD AND USER ------------"
 
+
 mysql -u root -e "ALTER USER 'root'@'localhost' IDENTIFIED BY '$MARIADB_ROOT_PASSWORD';" -p"$MARIADB_ROOT_PASSWORD"
 echo "Root password changed"
 
-mysql -u root -e "ALTER USER '$MARIADB_USER'@'%' IDENTIFIED BY '$MARIADB_PASSWORD';" -p"$MARIADB_ROOT_PASSWORD"
+mysql -u root -e "CREATE USER IF NOT EXISTS '$MARIADB_USER'@'%' IDENTIFIED BY '$MARIADB_ROOT_PASSWORD';" -p"$MARIADB_ROOT_PASSWORD"
+
+# mysql -u root -e "ALTER USER '$MARIADB_USER'@'%' IDENTIFIED BY '$MARIADB_PASSWORD';" -p"$MARIADB_ROOT_PASSWORD"
 echo "User password changed"
 
 
@@ -54,5 +52,10 @@ echo "------------------- DONE SETUP DB -------------------"
 echo "------------------- Restarting DB -------------------"
 
 mysqladmin -u root -p"$MARIADB_ROOT_PASSWORD" shutdown
+  service mariadb stop
+
+fi
+
+
 
 exec mysqld --user=root --socket=/run/mysqld/mysqld.sock --datadir='/var/lib/mysql'

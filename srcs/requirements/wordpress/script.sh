@@ -2,19 +2,7 @@
 
 cd /var/www/html
 
-function  maria_running() {
-	nc -z "mariadb" "3306"
-}
-
-function is_user_created() {
-	mysql -h mariadb -u "$MARIADB_USER" -p"$MARIADB_PASSWORD" -e "USE $MARIADB_DATABASE"
-}
-
-until maria_running && is_user_created; do
-	echo 'Waiting for MariaDB'
-	sleep 7
-done
-echo 'MariaDB connected'
+sleep 15
 
 if [ ! -f "/var/www/html/wp-config.php" ]; then
 	wp cli update --yes --allow-root
